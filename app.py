@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
-from db import db
 
 from security import authenticate, identity
 from resources.user import UserRegister
@@ -13,11 +12,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "h8ers"
 api = Api(app)
 
-#create the database with SQLAlchemy before a request is made to the API
-#before_first will only run once which is whats needed since you only want to create a database once
-@app.before_first_request
-def create_tables():
-    db.create_all()
 
 jwt = JWT(app, authenticate, identity)          #/auth
 
@@ -30,5 +24,6 @@ api.add_resource(StoreList, '/stores')
 api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__':
+    from db import db
     db.init_app(app)
     app.run(port=3200, debug=True)
