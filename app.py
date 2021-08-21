@@ -1,5 +1,4 @@
 import os
-import re
 from flask import Flask
 from flask_restful import Api
 from flask_jwt import JWT
@@ -15,7 +14,7 @@ if uri.startswith("postgres://"):
     uri = uri.replace("postrgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_DATABASE_URI'] = uri
 """
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI', 'sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "h8ers"
 api = Api(app)
