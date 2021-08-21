@@ -19,15 +19,15 @@ class Item(Resource):
         required=True,
         help="Every item needs a store id"
     )
-    #makes authorization neccessary
-    @jwt_required()
+
     #defining the methods the resource is going to accept
     def get(self, name):
         item = ItemModel.find_by_name(name)
         if item:
             return item.json()
         return {'message': 'Item not found'}, 404
-
+    #makes authorization neccessary
+    @jwt_required()
     def post(self, name):
         #deal with errors first
         if ItemModel.find_by_name(name):
@@ -46,6 +46,7 @@ class Item(Resource):
         #201 is the status code for created data
         return item.json(), 201
 
+    @jwt_required()
     def delete(self, name):
         item = ItemModel.find_by_name(name)
         if item:
@@ -53,6 +54,7 @@ class Item(Resource):
             return {'message': 'Item deleted.'}
         return {'message': 'Item not found.'}, 404
 
+    @jwt_required()
     def put(self, name):
         data = Item.parser.parse_args()
 
@@ -67,14 +69,9 @@ class Item(Resource):
 
         return item.json()
 
-"""
-class ItemList(Resource):
-    def get(self):
-        return {'items': list(map(lambda x: x.json(), ItemModel.query.all()))}
-"""
-    
 
 class ItemList(Resource):
+    @jwt_required()
     def get(self):
         return {'items': [item.json() for item in ItemModel.query.all()]}
 
